@@ -24,6 +24,7 @@ router.post('/login', async (req, res) => {
         await userWithToken.user.save();
         res.status(200).send(userWithToken);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error });
     }
 })
