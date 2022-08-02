@@ -1,5 +1,6 @@
 const Router = require('express').Router;
 const Post = require('../models/post');
+const User = require('../models/user');
 const auth = require('../middleware/auth');
 const router = new Router();
 
@@ -78,4 +79,19 @@ router.get('/all', auth, async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 })
+
+//api/post/user/:id
+router.get('/user/:id', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const posts = await Post.find({ owner: user._id });
+        res.send(posts);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;
